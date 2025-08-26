@@ -49,7 +49,7 @@ venv\Scripts\activate      # Windows
 ```bash
 pip install -r requirements.txt
 ```
-### Add API Key
+### 4. Add API Key
 Create a .env file in the project root:
 ```bash
 GROQ_API_KEY=your_api_key_here
