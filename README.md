@@ -88,4 +88,12 @@ streamlit run app.py
 - **Sentiment Analysis**: Detect candidate emotions and adapt questions accordingly.  
 - **Multilingual Support**: Allow candidates to interact in multiple languages.  
 - **Cloud Deployment**: Deploy on Streamlit Cloud, AWS, or GCP for a live demo.  
-- **Personalized Interviews**: Store candidate history to tailor future interview sessions.  
+- **Personalized Interviews**: Store candidate history to tailor future interview sessions.
+
+---
+
+## 👨‍💻 Author
+**Tejaswi Rokkam**  
+AI/ML Enthusiast 
+📧 Email: rokkamtejaswi10@example.com  
+🔗 [LinkedIn](https://www.linkedin.com/in/tejaswi-rokkam-55b089259)
