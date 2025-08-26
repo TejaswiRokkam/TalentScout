@@ -62,24 +62,24 @@ streamlit run app.py
 ---
 
 ## 🎬 Usage
+- The chatbot greets the candidate and asks permission to proceed.  
+- Candidate fills in their details in the form.  
+- Details are shown for confirmation.  
+- Chatbot starts interview:  
+  - Asks varied technical questions based on candidate’s tech stack  
+  - Maintains context across Q/A  
+  - Allows candidate to exit anytime (`exit`, `quit`, `bye`)  
+  - Provides fallback for unclear answers  
 
-1.The chatbot greets the candidate and asks permission to proceed.
-2.Candidate fills in their details in the form.
-3.Details are shown for confirmation.
-4.Chatbot starts interview:
-  -Asks varied technical questions based on candidate’s tech stack
-  -Maintains context across Q/A
-  -Allows candidate to exit anytime (exit, quit, bye)
-  -Provides fallback for unclear answers.
   
 ---
 
 
 ## 🔒 Data Privacy
+- Candidate data is stored **temporarily in session state** (not persisted).  
+- No sensitive data is saved or logged.  
+- API keys are secured with `.env` files.  
 
--Candidate data is stored temporarily in session state (not persisted).
--No sensitive data is saved or logged.
--API keys are secured with .env files.
 
 ---
 
