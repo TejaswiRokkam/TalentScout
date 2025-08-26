@@ -95,5 +95,6 @@ streamlit run app.py
 ## 👨‍💻 Author
 **Tejaswi Rokkam**  
 AI/ML Enthusiast 
+
 📧 Email: rokkamtejaswi10@example.com  
 🔗 [LinkedIn](https://www.linkedin.com/in/tejaswi-rokkam-55b089259)
