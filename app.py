@@ -59,7 +59,10 @@ elif st.session_state.step == "form":
     with st.form("candidate_form"):
         name = st.text_input("Full Name")
         email = st.text_input("Email Address")
+        phone = st.text_input("Phone Number")  # ✅ Added
         experience = st.number_input("Years of Experience", min_value=0, step=1)
+        position = st.text_input("Desired Position(s)")  # ✅ Added
+        location = st.text_input("Current Location")     # ✅ Added
         tech_stack = st.text_area("Your Tech Stack (comma separated, e.g., Python, SQL, Flask)")
 
         submitted = st.form_submit_button("Submit")
@@ -67,7 +70,10 @@ elif st.session_state.step == "form":
             st.session_state.candidate_details = {
                 "name": name,
                 "email": email,
+                "phone": phone,
                 "experience": experience,
+                "position": position,
+                "location": location,
                 "tech_stack": tech_stack
             }
             st.session_state.step = "confirm"
@@ -80,7 +86,10 @@ elif st.session_state.step == "confirm":
     st.chat_message("assistant").markdown(
         f"Thanks **{details['name']}**! Here are the details you submitted:\n\n"
         f"- **Email:** {details['email']}\n"
+        f"- **Phone:** {details['phone']}\n"
         f"- **Experience:** {details['experience']} years\n"
+        f"- **Desired Position(s):** {details['position']}\n"
+        f"- **Location:** {details['location']}\n"
         f"- **Tech Stack:** {details['tech_stack']}\n\n"
         "Are you ready to start answering interview questions?"
     )
@@ -97,7 +106,6 @@ elif st.session_state.step == "confirm":
 
 # ---- Step 4: Chatbot Interview ----
 elif st.session_state.step == "chat":
-    # Function to call Groq LLM
     def call_llm(messages):
         response = client.chat.completions.create(
             model="llama3-8b-8192",
@@ -110,13 +118,29 @@ elif st.session_state.step == "chat":
     details = st.session_state.candidate_details
     tech_stack = details['tech_stack']
 
-    # If chat just started, ask the first tailored interview question
-    if len(st.session_state.messages) == 1:  # only system prompt exists
+    # Exit keywords handling ✅
+    user_input = st.chat_input("Type your response here (or type 'exit' to quit)...")
+    if user_input and user_input.lower() in ["exit", "quit", "bye"]:
+        st.chat_message("assistant").markdown(
+            "Thank you for your time, wishing you the best in the hiring process! 👋"
+        )
+        st.stop()
+
+    # Fallback mechanism ✅
+    def handle_fallback(response):
+        if response is None or response.strip() == "":
+            return "I didn’t quite catch that. Could you clarify your response?"
+        return response
+
+    # Initial question setup
+    if len(st.session_state.messages) == 1:
         context = {
             "role": "system",
             "content": (
                 f"Candidate Details: Name={details['name']}, Email={details['email']}, "
-                f"Experience={details['experience']} years, Tech Stack={tech_stack}. "
+                f"Phone={details['phone']}, Position={details['position']}, "
+                f"Location={details['location']}, Experience={details['experience']} years, "
+                f"Tech Stack={tech_stack}. "
                 f"You are TalentScout, a professional interviewer. "
                 f"Start with an introductory question about their experience, then ask "
                 f"short, specific, and varied technical questions directly based on their tech stack. "
@@ -130,7 +154,7 @@ elif st.session_state.step == "chat":
         first_q = call_llm(st.session_state.messages + [
             {"role": "user", "content": "Start the interview with the first tailored question."}
         ])
-        st.session_state.messages.append({"role": "assistant", "content": first_q})
+        st.session_state.messages.append({"role": "assistant", "content": handle_fallback(first_q)})
 
     # Show chat history
     for msg in st.session_state.messages:
@@ -141,9 +165,8 @@ elif st.session_state.step == "chat":
             with st.chat_message("user"):
                 st.markdown(msg["content"])
 
-    # User input
-    user_input = st.chat_input("Type your response here...")
-    if user_input:
+    # Continue interview
+    if user_input and user_input.lower() not in ["exit", "quit", "bye"]:
         st.session_state.messages.append({"role": "user", "content": user_input})
 
         next_q = call_llm(st.session_state.messages + [
@@ -154,6 +177,6 @@ elif st.session_state.step == "chat":
                 "Avoid repeating previous questions."
             )}
         ])
-        st.session_state.messages.append({"role": "assistant", "content": next_q})
+        st.session_state.messages.append({"role": "assistant", "content": handle_fallback(next_q)})
 
         st.rerun()
