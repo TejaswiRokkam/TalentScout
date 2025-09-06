@@ -108,7 +108,7 @@ elif st.session_state.step == "confirm":
 elif st.session_state.step == "chat":
     def call_llm(messages):
         response = client.chat.completions.create(
-            model="llama3-8b-8192",
+            model="llama-3.1-8b-instant",
             messages=messages,
             temperature=0.7,
             max_tokens=512
